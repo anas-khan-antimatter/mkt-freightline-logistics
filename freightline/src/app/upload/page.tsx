@@ -78,8 +78,8 @@ export default function UploadPage() {
       return;
     }
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const text = e.target?.result as string;
+    reader.onload = () => {
+      const text = reader.result as string;
       if (text) parseCSV(text, file.name);
     };
     reader.readAsText(file);
