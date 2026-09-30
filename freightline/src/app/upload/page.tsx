@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Upload, Table, FileText, ArrowRight, Trash2, Download } from "lucide-react";
+import { Upload, FileText, ArrowRight, Trash2, Download } from "lucide-react";
 import Navbar from "@/components/sections/Navbar";
 import Footer from "@/components/sections/Footer";
 
@@ -14,6 +14,15 @@ interface LoadRow {
   carrier: string;
   status: string;
   bol: string;
+}
+
+function findColIndex(headers: string[], ...keywords: string[]): number {
+  for (let i = 0; i < headers.length; i++) {
+    for (const kw of keywords) {
+      if (headers[i].includes(kw)) return i;
+    }
+  }
+  return -1;
 }
 
 export default function UploadPage() {
@@ -31,12 +40,12 @@ export default function UploadPage() {
     }
 
     const header = lines[0].toLowerCase().split(",").map((h) => h.trim());
-    const originIdx = header.findIndex((h) => h.includes("origin"));
-    const destIdx = header.findIndex((h) => h.includes("dest") || h.includes("destination"));
-    const weightIdx = header.findIndex((h) => h.includes("weight"));
-    const commIdx = header.findIndex((h) => h.includes("commod") || h.includes("cargo"));
-    const carrierIdx = header.findIndex((h) => h.includes("carrier"));
-    const statusIdx = header.findIndex((h) => h.includes("status"));
+    const originIdx = findColIndex(header, "origin");
+    const destIdx = findColIndex(header, "dest");
+    const weightIdx = findColIndex(header, "weight");
+    const commIdx = findColIndex(header, "commod", "cargo");
+    const carrierIdx = findColIndex(header, "carrier");
+    const statusIdx = findColIndex(header, "status");
 
     if (originIdx === -1 || destIdx === -1) {
       setError("CSV must have at least 'origin' and 'destination' columns.");
@@ -50,6 +59,7 @@ export default function UploadPage() {
       const dest = destIdx < cols.length ? cols[destIdx] : "";
       if (!origin || !dest) continue;
 
+      const nowStr = Date.now().toString(36).toUpperCase();
       parsed.push({
         id: i,
         origin,
@@ -58,7 +68,7 @@ export default function UploadPage() {
         commodity: commIdx !== -1 && commIdx < cols.length ? cols[commIdx] : "—",
         carrier: carrierIdx !== -1 && carrierIdx < cols.length ? cols[carrierIdx] : "—",
         status: statusIdx !== -1 && statusIdx < cols.length ? cols[statusIdx] : "staged",
-        bol: `BOL-${Date.now().toString(36).toUpperCase()}-${String(i).padStart(3, "0")}`,
+        bol: `BOL-${nowStr}-${String(i).padStart(3, "0")}`,
       });
     }
 
@@ -103,7 +113,6 @@ export default function UploadPage() {
     setError("");
   };
 
-  // Status badge color
   const statusClass = (s: string) => {
     const lower = s.toLowerCase();
     if (lower === "delivered" || lower === "completed") return "text-primary";
@@ -171,7 +180,7 @@ export default function UploadPage() {
 
             {/* Actions when data loaded */}
             {rows.length > 0 && (
-              <div className="mx-auto mt-4 max-w-xl flex items-center gap-4">
+              <div className="mx-auto mt-4 max-w-xl flex flex-wrap items-center gap-3">
                 <span className="flex items-center gap-2 text-xs text-muted-foreground">
                   <FileText className="h-3.5 w-3.5" />
                   {fileName || `${rows.length} loads loaded`}
@@ -188,10 +197,11 @@ export default function UploadPage() {
                 </button>
                 <button
                   onClick={() => {
-                    // Client-side CSV export
-                    const header = Object.keys(rows[0]).join(",");
+                    const keys = ["origin", "destination", "weight", "commodity", "carrier", "status", "bol"];
+                    const header = keys.join(",");
                     const csv = rows.map((r) =>
-                      [r.origin, r.destination, r.weight, r.commodity, r.carrier, r.status, r.bol].map((v) => `"${v}"`).join(",")
+                      [r.origin, r.destination, r.weight, r.commodity, r.carrier, r.status, r.bol]
+                        .map((v) => `"${v}"`).join(",")
                     ).join("\n");
                     const blob = new Blob([`${header}\n${csv}`], { type: "text/csv" });
                     const url = URL.createObjectURL(blob);
