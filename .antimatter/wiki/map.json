@@ -1,21 +1,132 @@
 {
-  "root": "/tmp/am-ws/ch_muna4t96_1",
-  "name": "ch_muna4t96_1",
-  "generatedAt": "2026-09-29T23:00:39.564Z",
-  "fileCount": 1,
-  "dirCount": 1,
+  "root": "/tmp/am-ws/c-1790732963856-6k2pc",
+  "name": "c-1790732963856-6k2pc",
+  "generatedAt": "2026-09-30T16:50:15.474Z",
+  "fileCount": 47,
+  "dirCount": 9,
   "languages": {
-    "Markdown": 1
+    "Markdown": 9,
+    "JSON": 5,
+    "JavaScript": 2,
+    "TypeScript": 22,
+    "CSS": 1
   },
   "keyFiles": [
     "README.md"
   ],
   "directories": [
     {
+      "dir": ".antimatter/wiki",
+      "fileCount": 6,
+      "files": [
+        "index.md",
+        "log.md",
+        "map.json",
+        "map.md",
+        "overview.md",
+        "schema.md"
+      ],
+      "symbols": []
+    },
+    {
       "dir": "(root)",
+      "fileCount": 2,
+      "files": [
+        ".gitignore",
+        "README.md"
+      ],
+      "symbols": []
+    },
+    {
+      "dir": "freightline",
+      "fileCount": 11,
+      "files": [
+        ".gitignore",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "components.json",
+        "eslint.config.mjs",
+        "next.config.ts",
+        "package-lock.json",
+        "package.json",
+        "postcss.config.mjs",
+        "README.md",
+        "tsconfig.json"
+      ],
+      "symbols": []
+    },
+    {
+      "dir": "freightline/public",
+      "fileCount": 5,
+      "files": [
+        "file.svg",
+        "globe.svg",
+        "next.svg",
+        "vercel.svg",
+        "window.svg"
+      ],
+      "symbols": []
+    },
+    {
+      "dir": "freightline/src/app",
+      "fileCount": 4,
+      "files": [
+        "favicon.ico",
+        "globals.css",
+        "layout.tsx",
+        "page.tsx"
+      ],
+      "symbols": [
+        {
+          "name": "metadata",
+          "kind": "const"
+        }
+      ]
+    },
+    {
+      "dir": "freightline/src/app/tracking",
       "fileCount": 1,
       "files": [
-        "README.md"
+        "page.tsx"
+      ],
+      "symbols": []
+    },
+    {
+      "dir": "freightline/src/components/sections",
+      "fileCount": 8,
+      "files": [
+        "Capabilities.tsx",
+        "CaseStudies.tsx",
+        "Contact.tsx",
+        "Footer.tsx",
+        "Hero.tsx",
+        "LaneMap.tsx",
+        "Navbar.tsx",
+        "QuoteForm.tsx"
+      ],
+      "symbols": []
+    },
+    {
+      "dir": "freightline/src/components/ui",
+      "fileCount": 9,
+      "files": [
+        "badge.tsx",
+        "button.tsx",
+        "card.tsx",
+        "input.tsx",
+        "label.tsx",
+        "navigation-menu.tsx",
+        "select.tsx",
+        "sheet.tsx",
+        "textarea.tsx"
+      ],
+      "symbols": []
+    },
+    {
+      "dir": "freightline/src/lib",
+      "fileCount": 1,
+      "files": [
+        "utils.ts"
       ],
       "symbols": []
     }
