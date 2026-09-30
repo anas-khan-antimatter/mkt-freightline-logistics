@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Package, PackageCheck, Truck, ArrowRight, Search, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Package, PackageCheck, Truck, ArrowRight, Search, AlertCircle, MapPin } from "lucide-react";
 import Navbar from "@/components/sections/Navbar";
 import Footer from "@/components/sections/Footer";
 
@@ -19,13 +19,15 @@ export default function TrackingPage() {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [animPhase, setAnimPhase] = useState(0); // 0=hidden, 1=card, 2=all-events
 
   const handleSearch = async (e?: React.FormEvent) => {
     e?.preventDefault();
     setError(false);
     setData(null);
+    setAnimPhase(0);
 
-    const id = trackingId.trim().toUpperCase() || (e ? "" : "");
+    const id = trackingId.trim().toUpperCase() || "";
     if (!id) {
       setError(true);
       return;
@@ -37,6 +39,9 @@ export default function TrackingPage() {
       const result = await res.json();
       if (result.found) {
         setData(result);
+        // Staggered animation: card first, then events after
+        setTimeout(() => setAnimPhase(1), 200);
+        setTimeout(() => setAnimPhase(2), 500);
       } else {
         setError(true);
       }
@@ -49,14 +54,17 @@ export default function TrackingPage() {
 
   const fillSample = (id: string) => {
     setTrackingId(id);
-    // auto-search after brief render
     setTimeout(() => {
-      const ev = { preventDefault: () => {} } as React.FormEvent;
-      handleSearch(ev);
+      handleSearch({ preventDefault: () => {} } as React.FormEvent);
     }, 100);
   };
 
   const cfg = data ? statusConfig[data.status] : null;
+
+  // Compute progress percentage for status rail
+  const progressPct = data?.events
+    ? Math.min(100, Math.round((data.events.length / Math.max(data.events.length + 1, 5)) * 100))
+    : 0;
 
   return (
     <>
@@ -118,7 +126,7 @@ export default function TrackingPage() {
               <span className="text-xs text-muted-foreground self-center">(demo IDs)</span>
             </div>
 
-            {/* Loading */}
+            {/* Loading indicator */}
             {loading && (
               <div className="mt-12 text-center">
                 <div className="inline-flex items-center gap-3">
@@ -131,13 +139,32 @@ export default function TrackingPage() {
             {/* Results */}
             {data && cfg && !loading && (
               <div className="mt-12 space-y-8">
-                {/* Status banner */}
-                <div className={`corner-stencil industrial-border flex items-center gap-4 border p-6`}>
-                  <span className={`inline-block h-8 w-8 ${data.status === "delayed" ? "text-destructive" : "text-primary"}`}>
-                    {data.status === "delivered" ? "✓" : data.status === "delayed" ? "⚠" : "▶"}
+                {/* ── 1. Status banner (fade-in phase 1) ── */}
+                <div
+                  className={`corner-stencil industrial-border flex items-center gap-4 border p-6 transition-all duration-500 ${
+                    animPhase >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                  }`}
+                >
+                  <span className={`inline-flex h-10 w-10 items-center justify-center rounded-full border-2 ${
+                    data.status === "delayed" ? "border-destructive text-destructive" :
+                    data.status === "delivered" ? "border-primary text-primary" :
+                    "border-primary text-primary"
+                  }`}>
+                    {data.status === "delivered" ? (
+                      <PackageCheck className="h-6 w-6" />
+                    ) : data.status === "delayed" ? (
+                      <AlertCircle className="h-6 w-6" />
+                    ) : (
+                      <Truck className="h-6 w-6" />
+                    )}
                   </span>
                   <div>
-                    <p className={`font-mono text-sm uppercase tracking-wider ${cfg.color}`}>
+                    <p className={`font-mono text-sm uppercase tracking-wider ${cfg.color} flex items-center gap-2`}>
+                      <span className={`inline-block h-2.5 w-2.5 rounded-full ${
+                        data.status === "delivered" ? "bg-primary" :
+                        data.status === "delayed" ? "bg-destructive" :
+                        "bg-primary pulse-dot"
+                      }`} />
                       {cfg.label}
                     </p>
                     <p className="mt-1 text-lg font-bold text-foreground">
@@ -146,8 +173,27 @@ export default function TrackingPage() {
                   </div>
                 </div>
 
-                {/* Shipment info grid */}
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+                {/* ── 2. Progress status rail (phase 1) ── */}
+                <div className={`transition-all duration-500 ${
+                  animPhase >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}>
+                  {/* Journey progress bar */}
+                  <div className="relative h-2 rounded-sm bg-[#2a2a2a] overflow-hidden">
+                    <div
+                      className="absolute left-0 top-0 h-full rounded-sm bg-gradient-to-r from-primary to-accent transition-all duration-1000"
+                      style={{ width: `${progressPct}%` }}
+                    />
+                  </div>
+                  <div className="mt-1 flex justify-between text-[10px]">
+                    <span className="stencil-label">{data.origin}</span>
+                    <span className="stencil-label">{data.destination}</span>
+                  </div>
+                </div>
+
+                {/* ── 3. Shipment info grid (phase 1) ── */}
+                <div className={`grid grid-cols-2 gap-4 sm:grid-cols-4 transition-all duration-500 ${
+                  animPhase >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                }`}>
                   {[
                     { label: "Cargo", value: data.cargo },
                     { label: "Weight", value: data.weight },
@@ -165,42 +211,84 @@ export default function TrackingPage() {
                   ))}
                 </div>
 
-                {/* AI insight badge */}
+                {/* ── 4. AI insight badge (phase 1) ── */}
                 {data.insight && (
-                  <div className="flex items-start gap-3 rounded-sm border border-primary/20 bg-primary/5 p-4">
+                  <div className={`flex items-start gap-3 rounded-sm border border-primary/20 bg-primary/5 p-4 transition-all duration-500 ${
+                    animPhase >= 1 ? "opacity-100" : "opacity-0"
+                  }`}>
                     <span className="text-sm text-primary">📋</span>
                     <p className="text-sm text-foreground">{data.insight}</p>
                   </div>
                 )}
 
-                {/* Animated timeline */}
-                <div>
-                  <p className="mb-4 font-mono text-xs uppercase tracking-wider text-muted-foreground">
-                    Tracking Events
-                  </p>
+                {/* ── 5. Animated timeline (phase 2) ── */}
+                <div className={`transition-all duration-700 ${
+                  animPhase >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+                }`}>
+                  <div className="mb-4 flex items-center gap-3">
+                    <MapPin className="h-4 w-4 text-primary" />
+                    <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                      Tracking Events
+                    </span>
+                    <span className="stencil-label">{data.events.length} event{data.events.length !== 1 ? "s" : ""}</span>
+                  </div>
+
                   <div className="timeline-rail space-y-0">
-                    {data.events.map((event: any, i: number) => (
-                      <div key={i} className="relative flex gap-5 pb-6 last:pb-0">
-                        {/* Dot */}
-                        <div className={`relative mt-1.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${
-                          i === data.events.length - 1
-                            ? "border-2 border-primary"
-                            : "border border-[#2a2a2a]"
-                        } ${i === data.events.length - 1 ? "bg-primary/20" : "bg-[#1c1c1c]"}`}>
-                          <span className={`inline-block h-1.5 w-1.5 rounded-full ${
-                            i === data.events.length - 1 ? "bg-primary pulse-dot" : "bg-[#404040]"
-                          }`} />
-                        </div>
-                        {/* Content */}
-                        <div className="flex-1">
-                          <div className="flex items-baseline gap-3">
-                            <span className="font-mono text-[11px] text-muted-foreground">{event.date}</span>
-                            <span className="stencil-label">{event.location}</span>
+                    {data.events.map((event: any, i: number) => {
+                      const isLast = i === data.events.length - 1;
+                      const isFirst = i === 0;
+                      const delay = i * 120; // staggered animation entrance
+                      return (
+                        <div
+                          key={i}
+                          className="relative flex gap-5 pb-6 last:pb-0 transition-all duration-500"
+                          style={{
+                            opacity: animPhase >= 2 ? 1 : 0,
+                            transform: animPhase >= 2 ? "translateY(0)" : "translateY(8px)",
+                            transitionDelay: `${delay}ms`,
+                          }}
+                        >
+                          {/* Connector dot */}
+                          <div className={`relative mt-1.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-all duration-300 ${
+                            isLast
+                              ? "border-2 border-primary bg-primary/20 shadow-[0_0_8px_rgba(245,200,66,0.25)]"
+                              : "border border-[#2a2a2a] bg-[#1c1c1c]"
+                          }`}>
+                            <span className={`inline-block h-2 w-2 rounded-full transition-all duration-300 ${
+                              isLast ? "bg-primary pulse-dot" : "bg-[#404040]"
+                            }`} />
                           </div>
-                          <p className="mt-0.5 text-sm text-foreground">{event.description}</p>
+
+                          {/* Event content */}
+                          <div className="flex-1 rounded-sm border border-[rgba(255,255,255,0.04)] bg-[rgba(255,255,255,0.015)] p-3">
+                            <div className="flex items-baseline gap-3">
+                              <span className="font-mono text-[11px] text-muted-foreground">{event.date}</span>
+                              <span className="stencil-label">{event.location}</span>
+                              {isFirst && <span className="stencil-label">PICKUP</span>}
+                              {isLast && data.status === "delivered" && <span className="stencil-label">DELIVERED</span>}
+                            </div>
+                            <p className="mt-1 text-sm text-foreground">{event.description}</p>
+                            {isLast && data.status !== "delivered" && (
+                              <p className="mt-1.5 text-[10px] text-primary">
+                                ▲ Next update expected within 4 hours
+                              </p>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* ── 6. Route summary ── */}
+                <div className={`border-t border-[#2a2a2a]/30 pt-6 transition-all duration-700 ${
+                  animPhase >= 2 ? "opacity-100" : "opacity-0"
+                }`}>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="stencil-label">Origin: {data.origin}</span>
+                    <span className="stencil-label">Dest: {data.destination}</span>
+                    <span className="stencil-label">Stops: {data.events.length}</span>
+                    <span className="stencil-label">Status: {cfg.label}</span>
                   </div>
                 </div>
               </div>
