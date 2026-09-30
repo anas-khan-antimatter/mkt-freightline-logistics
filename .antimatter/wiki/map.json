@@ -1,0 +1,23 @@
+{
+  "root": "/tmp/am-ws/c-1790732963856-6k2pc",
+  "name": "c-1790732963856-6k2pc",
+  "generatedAt": "2026-09-30T14:13:06.594Z",
+  "fileCount": 1,
+  "dirCount": 1,
+  "languages": {
+    "Markdown": 1
+  },
+  "keyFiles": [
+    "README.md"
+  ],
+  "directories": [
+    {
+      "dir": "(root)",
+      "fileCount": 1,
+      "files": [
+        "README.md"
+      ],
+      "symbols": []
+    }
+  ]
+}
