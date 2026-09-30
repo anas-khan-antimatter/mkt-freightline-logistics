@@ -13,20 +13,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // Deterministic AI fallback: generate a BOL stub
-    const nowMs = new Date().getTime();
-    const bolNumber = `BOL-${nowMs.toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-    const now = new Date().toISOString();
+    // Deterministic fallback: generate a BOL stub without needing an AI key
+    const now = Date.now();
+    const bolNumber = `BOL-${now.toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
 
     return NextResponse.json({
       success: true,
       bolNumber,
       documentName,
       documentType,
-      receivedAt: now,
+      receivedAt: new Date().toISOString(),
       status: "staged",
       message: `Document "${documentName}" received. BOL #${bolNumber} issued for carrier assignment.`,
-      // In production this would be persisted and routed to the appropriate carrier
       stub: {
         shipper: "Freightline Logistics Inc.",
         consignee: "(Awaiting assignment)",
@@ -35,7 +33,6 @@ export async function POST(request: Request) {
         pieces: 0,
         weight: "0 lbs",
         bolNumber,
-        date: now.split("T")[0],
       },
     });
   } catch {
