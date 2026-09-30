@@ -5,99 +5,55 @@ import { Package, PackageCheck, Truck, ArrowRight, Search, AlertCircle } from "l
 import Navbar from "@/components/sections/Navbar";
 import Footer from "@/components/sections/Footer";
 
-// Mock tracking data
-const sampleTrackingData: Record<string, {
-  status: "in-transit" | "delivered" | "delayed" | "processing";
-  origin: string;
-  destination: string;
-  cargo: string;
-  weight: string;
-  pickupDate: string;
-  estDelivery: string;
-  events: { date: string; location: string; description: string }[];
-}> = {
-  "FL-2024-7821": {
-    status: "in-transit",
-    origin: "Chicago, IL",
-    destination: "Atlanta, GA",
-    cargo: "Steel Coils",
-    weight: "42,500 lbs",
-    pickupDate: "2024-09-26",
-    estDelivery: "2024-09-29",
-    events: [
-      { date: "2024-09-26 08:14", location: "Chicago, IL", description: "Pickup complete — seal #8742A" },
-      { date: "2024-09-26 14:30", location: "Gary, IN", description: "Scale check — 42,500 lbs verified" },
-      { date: "2024-09-27 06:45", location: "Indianapolis, IN", description: "In transit — driver rotation" },
-      { date: "2024-09-28 02:12", location: "Nashville, TN", description: "Fuel stop — ETA on schedule" },
-      { date: "2024-09-28 18:00", location: "Chattanooga, TN", description: "Last check-in before delivery" },
-    ],
-  },
-  "FL-2024-5632": {
-    status: "delivered",
-    origin: "Dallas, TX",
-    destination: "Phoenix, AZ",
-    cargo: "Auto Parts",
-    weight: "18,200 lbs",
-    pickupDate: "2024-09-22",
-    estDelivery: "2024-09-24",
-    events: [
-      { date: "2024-09-22 10:30", location: "Dallas, TX", description: "Pickup complete" },
-      { date: "2024-09-22 21:15", location: "Abilene, TX", description: "Cross-dock transfer" },
-      { date: "2024-09-23 09:40", location: "El Paso, TX", description: "Border check complete" },
-      { date: "2024-09-24 11:22", location: "Phoenix, AZ", description: "DELIVERED — signed by M. Chen" },
-    ],
-  },
-  "FL-2024-3345": {
-    status: "delayed",
-    origin: "Seattle, WA",
-    destination: "Denver, CO",
-    cargo: "Industrial Equipment",
-    weight: "38,700 lbs",
-    pickupDate: "2024-09-25",
-    estDelivery: "2024-09-28",
-    events: [
-      { date: "2024-09-25 07:50", location: "Seattle, WA", description: "Pickup complete" },
-      { date: "2024-09-26 13:20", location: "Spokane, WA", description: "Weather delay — I-90 restricted" },
-      { date: "2024-09-27 10:00", location: "Spokane, WA", description: "Route re-routed via I-84" },
-    ],
-  },
+const statusConfig: Record<string, { label: string; color: string }> = {
+  "in-transit": { label: "In Transit", color: "text-primary" },
+  delivered: { label: "Delivered", color: "text-green-500" },
+  delayed: { label: "Delayed", color: "text-destructive" },
+  processing: { label: "Processing", color: "text-muted-foreground" },
 };
 
-const statusConfig = {
-  "in-transit": { label: "In Transit", color: "text-primary", bg: "bg-primary/10", icon: Truck },
-  delivered: { label: "Delivered", color: "text-green-500", bg: "bg-green-500/10", icon: PackageCheck },
-  delayed: { label: "Delayed", color: "text-red-500", bg: "bg-red-500/10", icon: AlertCircle },
-  processing: { label: "Processing", color: "text-yellow-500", bg: "bg-yellow-500/10", icon: Package },
-};
+const sampleIds = ["FL-2024-7821", "FL-2024-5632", "FL-2024-3345"];
 
 export default function TrackingPage() {
   const [trackingId, setTrackingId] = useState("");
-  const [data, setData] = useState<typeof sampleTrackingData[keyof typeof sampleTrackingData] | null>(null);
+  const [data, setData] = useState<any>(null);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = async (e?: React.FormEvent) => {
+    e?.preventDefault();
     setError(false);
     setData(null);
 
-    if (!trackingId.trim()) {
+    const id = trackingId.trim().toUpperCase() || (e ? "" : "");
+    if (!id) {
       setError(true);
       return;
     }
 
-    const result = sampleTrackingData[trackingId.trim().toUpperCase()];
-    if (result) {
-      setData(result);
-    } else {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/track?id=${encodeURIComponent(id)}`);
+      const result = await res.json();
+      if (result.found) {
+        setData(result);
+      } else {
+        setError(true);
+      }
+    } catch {
       setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Quick fill with a known ID
   const fillSample = (id: string) => {
     setTrackingId(id);
-    setData(sampleTrackingData[id]);
-    setError(false);
+    // auto-search after brief render
+    setTimeout(() => {
+      const ev = { preventDefault: () => {} } as React.FormEvent;
+      handleSearch(ev);
+    }, 100);
   };
 
   const cfg = data ? statusConfig[data.status] : null;
@@ -106,8 +62,9 @@ export default function TrackingPage() {
     <>
       <Navbar />
       <main className="flex-1 pt-20">
-        <section className="border-b border-[#3a3530]/30 py-24">
+        <section className="border-b border-[#2a2a2a]/30 py-24">
           <div className="mx-auto max-w-4xl px-6">
+            {/* Section header */}
             <div className="mb-16 text-center">
               <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
                 / Shipment Tracking
@@ -120,7 +77,7 @@ export default function TrackingPage() {
               </p>
             </div>
 
-            {/* Search */}
+            {/* Search form */}
             <form onSubmit={handleSearch} className="mx-auto max-w-xl">
               <div className="flex gap-2">
                 <div className="relative flex-1">
@@ -129,7 +86,7 @@ export default function TrackingPage() {
                     value={trackingId}
                     onChange={(e) => { setTrackingId(e.target.value); setError(false); }}
                     placeholder="e.g. FL-2024-7821"
-                    className="w-full rounded-sm border border-[#3a3530] bg-[#1a1a1a] py-4 pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none"
+                    className="w-full rounded-sm border border-[#2a2a2a] bg-[#1c1c1c] py-4 pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none"
                   />
                 </div>
                 <button
@@ -141,40 +98,50 @@ export default function TrackingPage() {
                 </button>
               </div>
               {error && (
-                <p className="mt-3 text-sm text-red-500">
-                  No shipment found for that tracking number. Try one of the demo IDs below.
+                <p className="mt-3 text-sm text-destructive">
+                  No shipment found for that tracking number. Try a demo ID below.
                 </p>
               )}
             </form>
 
-            {/* Demo quick links */}
+            {/* Quick links */}
             <div className="mt-6 flex flex-wrap justify-center gap-2">
-              {Object.keys(sampleTrackingData).map((id) => (
+              {sampleIds.map((id) => (
                 <button
                   key={id}
                   onClick={() => fillSample(id)}
-                  className="rounded-sm border border-[#3a3530]/30 px-3 py-1.5 text-xs font-mono text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary"
+                  className="rounded-sm border border-[#2a2a2a]/30 px-3 py-1.5 text-xs font-mono text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary"
                 >
                   {id}
                 </button>
               ))}
-              <span className="text-xs text-muted-foreground self-center">
-                (demo tracking IDs)
-              </span>
+              <span className="text-xs text-muted-foreground self-center">(demo IDs)</span>
             </div>
 
+            {/* Loading */}
+            {loading && (
+              <div className="mt-12 text-center">
+                <div className="inline-flex items-center gap-3">
+                  <span className="inline-block h-3 w-3 rounded-full bg-primary pulse-dot" />
+                  <span className="text-sm text-muted-foreground">Querying network…</span>
+                </div>
+              </div>
+            )}
+
             {/* Results */}
-            {data && cfg && (
+            {data && cfg && !loading && (
               <div className="mt-12 space-y-8">
                 {/* Status banner */}
-                <div className={`flex items-center gap-4 rounded-sm border ${cfg.bg} border-[#3a3530]/30 p-6`}>
-                  <cfg.icon className={`h-8 w-8 ${cfg.color}`} />
+                <div className={`corner-stencil industrial-border flex items-center gap-4 border p-6`}>
+                  <span className={`inline-block h-8 w-8 ${data.status === "delayed" ? "text-destructive" : "text-primary"}`}>
+                    {data.status === "delivered" ? "✓" : data.status === "delayed" ? "⚠" : "▶"}
+                  </span>
                   <div>
                     <p className={`font-mono text-sm uppercase tracking-wider ${cfg.color}`}>
                       {cfg.label}
                     </p>
                     <p className="mt-1 text-lg font-bold text-foreground">
-                      {data.origin} <ArrowRight className="mx-2 inline h-4 w-4 text-muted-foreground" /> {data.destination}
+                      {data.origin} <span className="text-muted-foreground mx-2">→</span> {data.destination}
                     </p>
                   </div>
                 </div>
@@ -187,7 +154,7 @@ export default function TrackingPage() {
                     { label: "Pickup", value: data.pickupDate },
                     { label: "Est. Delivery", value: data.estDelivery },
                   ].map((item) => (
-                    <div key={item.label} className="rounded-sm border border-[#3a3530]/30 bg-[#1a1a1a] p-4">
+                    <div key={item.label} className="rounded-sm border border-[#2a2a2a]/30 bg-[#1c1c1c] p-4">
                       <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                         {item.label}
                       </p>
@@ -198,28 +165,39 @@ export default function TrackingPage() {
                   ))}
                 </div>
 
-                {/* Timeline */}
+                {/* AI insight badge */}
+                {data.insight && (
+                  <div className="flex items-start gap-3 rounded-sm border border-primary/20 bg-primary/5 p-4">
+                    <span className="text-sm text-primary">📋</span>
+                    <p className="text-sm text-foreground">{data.insight}</p>
+                  </div>
+                )}
+
+                {/* Animated timeline */}
                 <div>
                   <p className="mb-4 font-mono text-xs uppercase tracking-wider text-muted-foreground">
                     Tracking Events
                   </p>
-                  <div className="space-y-0">
-                    {data.events.map((event, i) => (
-                      <div key={i} className="relative flex gap-4 pb-6 last:pb-0">
-                        {/* Connector line */}
-                        {i < data.events.length - 1 && (
-                          <div className="absolute left-[7px] top-3.5 h-full w-px bg-[#3a3530]/50" />
-                        )}
+                  <div className="timeline-rail space-y-0">
+                    {data.events.map((event: any, i: number) => (
+                      <div key={i} className="relative flex gap-5 pb-6 last:pb-0">
                         {/* Dot */}
-                        <div className={`relative z-10 mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full border-2 ${
+                        <div className={`relative mt-1.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full ${
                           i === data.events.length - 1
-                            ? "border-primary bg-primary/20"
-                            : "border-[#3a3530] bg-[#1a1a1a]"
-                        }`} />
+                            ? "border-2 border-primary"
+                            : "border border-[#2a2a2a]"
+                        } ${i === data.events.length - 1 ? "bg-primary/20" : "bg-[#1c1c1c]"}`}>
+                          <span className={`inline-block h-1.5 w-1.5 rounded-full ${
+                            i === data.events.length - 1 ? "bg-primary pulse-dot" : "bg-[#404040]"
+                          }`} />
+                        </div>
+                        {/* Content */}
                         <div className="flex-1">
-                          <p className="font-mono text-xs text-muted-foreground">{event.date}</p>
-                          <p className="mt-0.5 text-sm font-medium text-foreground">{event.location}</p>
-                          <p className="text-sm text-muted-foreground">{event.description}</p>
+                          <div className="flex items-baseline gap-3">
+                            <span className="font-mono text-[11px] text-muted-foreground">{event.date}</span>
+                            <span className="stencil-label">{event.location}</span>
+                          </div>
+                          <p className="mt-0.5 text-sm text-foreground">{event.description}</p>
                         </div>
                       </div>
                     ))}
