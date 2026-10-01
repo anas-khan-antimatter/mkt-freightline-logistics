@@ -1,11 +1,11 @@
 {
   "root": "/tmp/am-ws/c-1790732963856-6k2pc",
   "name": "c-1790732963856-6k2pc",
-  "generatedAt": "2026-10-01T14:41:26.953Z",
-  "fileCount": 56,
+  "generatedAt": "2026-10-01T15:10:46.273Z",
+  "fileCount": 57,
   "dirCount": 18,
   "languages": {
-    "JSON": 6,
+    "JSON": 7,
     "Markdown": 9,
     "JavaScript": 2,
     "TypeScript": 30,
@@ -38,10 +38,11 @@
     },
     {
       "dir": "(root)",
-      "fileCount": 2,
+      "fileCount": 3,
       "files": [
         ".gitignore",
-        "README.md"
+        "README.md",
+        "vercel.json"
       ],
       "symbols": []
     },

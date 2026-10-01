@@ -1,11 +1,11 @@
 # Workspace Map — c-1790732963856-6k2pc
-_Generated 2026-10-01 · 56 files · 18 directories_  
+_Generated 2026-10-01 · 57 files · 18 directories_  
 _Deterministic structural map. Regenerate with the `map` tool or "Antimatter: Map Workspace". Do not hand-edit._
 
 ## Languages
 - TypeScript: 30
 - Markdown: 9
-- JSON: 6
+- JSON: 7
 - JavaScript: 2
 - CSS: 1
 
@@ -19,8 +19,8 @@ _Deterministic structural map. Regenerate with the `map` tool or "Antimatter: Ma
 ### `.antimatter/wiki` — 6 files
 - files: index.md, log.md, map.json, map.md, overview.md, schema.md
 
-### `(root)` — 2 files
-- files: .gitignore, README.md
+### `(root)` — 3 files
+- files: .gitignore, README.md, vercel.json
 
 ### `freightline` — 11 files
 - files: .gitignore, AGENTS.md, CLAUDE.md, components.json, eslint.config.mjs, next.config.ts, package-lock.json, package.json, postcss.config.mjs, README.md, tsconfig.json
