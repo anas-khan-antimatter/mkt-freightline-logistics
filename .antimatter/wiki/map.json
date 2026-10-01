@@ -1,14 +1,14 @@
 {
   "root": "/tmp/am-ws/c-1790732963856-6k2pc",
   "name": "c-1790732963856-6k2pc",
-  "generatedAt": "2026-09-30T17:39:34.624Z",
-  "fileCount": 47,
-  "dirCount": 9,
+  "generatedAt": "2026-10-01T03:17:51.643Z",
+  "fileCount": 55,
+  "dirCount": 17,
   "languages": {
     "Markdown": 9,
     "JSON": 5,
     "JavaScript": 2,
-    "TypeScript": 22,
+    "TypeScript": 30,
     "CSS": 1
   },
   "keyFiles": [
@@ -84,7 +84,91 @@
       ]
     },
     {
+      "dir": "freightline/src/app/api/bol",
+      "fileCount": 1,
+      "files": [
+        "route.ts"
+      ],
+      "symbols": [
+        {
+          "name": "POST",
+          "kind": "fn"
+        }
+      ]
+    },
+    {
+      "dir": "freightline/src/app/api/lanes",
+      "fileCount": 1,
+      "files": [
+        "route.ts"
+      ],
+      "symbols": [
+        {
+          "name": "GET",
+          "kind": "fn"
+        }
+      ]
+    },
+    {
+      "dir": "freightline/src/app/api/quote",
+      "fileCount": 1,
+      "files": [
+        "route.ts"
+      ],
+      "symbols": [
+        {
+          "name": "POST",
+          "kind": "fn"
+        }
+      ]
+    },
+    {
+      "dir": "freightline/src/app/api/track",
+      "fileCount": 1,
+      "files": [
+        "route.ts"
+      ],
+      "symbols": [
+        {
+          "name": "GET",
+          "kind": "fn"
+        }
+      ]
+    },
+    {
+      "dir": "freightline/src/app/dashboard",
+      "fileCount": 1,
+      "files": [
+        "page.tsx"
+      ],
+      "symbols": []
+    },
+    {
+      "dir": "freightline/src/app/lanes",
+      "fileCount": 1,
+      "files": [
+        "page.tsx"
+      ],
+      "symbols": []
+    },
+    {
+      "dir": "freightline/src/app/quote",
+      "fileCount": 1,
+      "files": [
+        "page.tsx"
+      ],
+      "symbols": []
+    },
+    {
       "dir": "freightline/src/app/tracking",
+      "fileCount": 1,
+      "files": [
+        "page.tsx"
+      ],
+      "symbols": []
+    },
+    {
+      "dir": "freightline/src/app/upload",
       "fileCount": 1,
       "files": [
         "page.tsx"
