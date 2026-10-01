@@ -1,11 +1,11 @@
 {
-  "root": "/tmp/am-ws/c-1790732963856-6k2pc",
-  "name": "c-1790732963856-6k2pc",
-  "generatedAt": "2026-10-01T15:10:46.273Z",
-  "fileCount": 57,
-  "dirCount": 18,
+  "root": "/tmp/am-ws/c-1790877729008-pf1n9",
+  "name": "c-1790877729008-pf1n9",
+  "generatedAt": "2026-10-01T18:32:08.464Z",
+  "fileCount": 58,
+  "dirCount": 19,
   "languages": {
-    "JSON": 7,
+    "JSON": 8,
     "Markdown": 9,
     "JavaScript": 2,
     "TypeScript": 30,
@@ -15,6 +15,14 @@
     "README.md"
   ],
   "directories": [
+    {
+      "dir": ".antimatter",
+      "fileCount": 1,
+      "files": [
+        "graph.json"
+      ],
+      "symbols": []
+    },
     {
       "dir": ".antimatter/lanes",
       "fileCount": 1,
