@@ -1,11 +1,11 @@
 # Workspace Map — c-1790732963856-6k2pc
-_Generated 2026-09-30 · 47 files · 9 directories_  
+_Generated 2026-10-01 · 56 files · 18 directories_  
 _Deterministic structural map. Regenerate with the `map` tool or "Antimatter: Map Workspace". Do not hand-edit._
 
 ## Languages
-- TypeScript: 22
+- TypeScript: 30
 - Markdown: 9
-- JSON: 5
+- JSON: 6
 - JavaScript: 2
 - CSS: 1
 
@@ -13,6 +13,9 @@ _Deterministic structural map. Regenerate with the `map` tool or "Antimatter: Ma
 - `README.md`
 
 ## Directories
+### `.antimatter/lanes` — 1 file
+- files: ship.json
+
 ### `.antimatter/wiki` — 6 files
 - files: index.md, log.md, map.json, map.md, overview.md, schema.md
 
@@ -29,7 +32,35 @@ _Deterministic structural map. Regenerate with the `map` tool or "Antimatter: Ma
 - symbols: metadata (const)
 - files: favicon.ico, globals.css, layout.tsx, page.tsx
 
+### `freightline/src/app/api/bol` — 1 file
+- symbols: POST (fn)
+- files: route.ts
+
+### `freightline/src/app/api/lanes` — 1 file
+- symbols: GET (fn)
+- files: route.ts
+
+### `freightline/src/app/api/quote` — 1 file
+- symbols: POST (fn)
+- files: route.ts
+
+### `freightline/src/app/api/track` — 1 file
+- symbols: GET (fn)
+- files: route.ts
+
+### `freightline/src/app/dashboard` — 1 file
+- files: page.tsx
+
+### `freightline/src/app/lanes` — 1 file
+- files: page.tsx
+
+### `freightline/src/app/quote` — 1 file
+- files: page.tsx
+
 ### `freightline/src/app/tracking` — 1 file
+- files: page.tsx
+
+### `freightline/src/app/upload` — 1 file
 - files: page.tsx
 
 ### `freightline/src/components/sections` — 8 files

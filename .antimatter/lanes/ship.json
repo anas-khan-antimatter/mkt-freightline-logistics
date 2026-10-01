@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "runsOn": "ubuntu-latest",
+  "setup": [
+    "npm ci"
+  ],
+  "build": [
+    "npm run build"
+  ],
+  "probes": [
+    {
+      "kind": "browser",
+      "url": "/"
+    },
+    {
+      "kind": "browser",
+      "url": "/lanes"
+    },
+    {
+      "kind": "browser",
+      "url": "/quote"
+    },
+    {
+      "kind": "browser",
+      "url": "/tracking"
+    },
+    {
+      "kind": "http",
+      "url": "/api/bol"
+    },
+    {
+      "kind": "http",
+      "url": "/api/quote"
+    },
+    {
+      "kind": "http",
+      "url": "/api/track"
+    }
+  ]
+}
