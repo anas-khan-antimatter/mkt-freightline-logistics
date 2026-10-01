@@ -81,7 +81,7 @@ export default function UploadPage() {
     setFileName(name);
   }, []);
 
-  const handleFile = useCallback((file: File | null) => {
+  const handleFile = useCallback((file: File | null | undefined) => {
     if (!file) return;
     if (!file.name.endsWith(".csv")) {
       setError("Please upload a .csv file.");
@@ -95,16 +95,17 @@ export default function UploadPage() {
     reader.readAsText(file);
   }, [parseCSV]);
 
-  const handleDrop = useCallback((e: DragEvent) => {
+  const handleDrop = useCallback((e: any) => {
     e.preventDefault();
     setDragging(false);
-    const file = e.dataTransfer?.files?.[0];
+    const file: File | null = e.dataTransfer?.files?.[0] ?? null;
     handleFile(file);
   }, [handleFile]);
 
-  const handleFileInput = useCallback((e: Event) => {
+  const handleFileInput = useCallback((e: any) => {
     const input = e.target as HTMLInputElement;
-    handleFile(input.files?.[0]);
+    const file: File | null = input.files?.[0] ?? null;
+    handleFile(file);
   }, [handleFile]);
 
   const clearAll = () => {
