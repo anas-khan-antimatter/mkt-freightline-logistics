@@ -25,15 +25,7 @@ function estimateRate(
   commodityClass: string,
   palletCount: number,
   urgency: string,
-): {
-  lineHaul: number;
-  fuelSurcharge: number;
-  palletFee: number;
-  accessorials: number;
-  total: number;
-  breakdown: Record<string, number>;
-  classMultiplier: number;
-} {
+): Record<string, unknown> {
   const baseRate = 1.45;
   let weightMultiplier = 1;
   if (weight <= 500) weightMultiplier = 0.6;
