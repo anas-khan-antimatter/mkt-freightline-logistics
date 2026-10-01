@@ -10,10 +10,6 @@
   "probes": [
     {
       "kind": "browser",
-      "url": "/"
-    },
-    {
-      "kind": "browser",
       "url": "/lanes"
     },
     {
