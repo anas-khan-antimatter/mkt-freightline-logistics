@@ -36,7 +36,7 @@ _Deterministic structural map. Regenerate with the `map` tool or "Antimatter: Ma
 - files: favicon.ico, globals.css, layout.tsx, page.tsx
 
 ### `freightline/src/app/api/bol` — 1 file
-- symbols: POST (fn)
+- symbols: GET (fn), POST (fn)
 - files: route.ts
 
 ### `freightline/src/app/api/lanes` — 1 file
@@ -44,7 +44,7 @@ _Deterministic structural map. Regenerate with the `map` tool or "Antimatter: Ma
 - files: route.ts
 
 ### `freightline/src/app/api/quote` — 1 file
-- symbols: POST (fn)
+- symbols: GET (fn), POST (fn)
 - files: route.ts
 
 ### `freightline/src/app/api/track` — 1 file
