@@ -63,10 +63,14 @@ export async function GET(request: Request) {
   const id = url.searchParams.get("id")?.trim().toUpperCase() || "";
 
   if (!id) {
-    return NextResponse.json(
-      { error: "Missing tracking id parameter" },
-      { status: 400 }
-    );
+    return NextResponse.json({
+      message: "Shipment Tracking API — GET with ?id=<tracking-number> to retrieve shipment status and events.",
+      usage: {
+        method: "GET",
+        params: { id: "string (tracking number, e.g. FL-2024-7821)" },
+        knownTrackingIds: Object.keys(trackingDB),
+      },
+    });
   }
 
   const record = trackingDB[id];
