@@ -1,3 +1,4 @@
 {
-  "rootDirectory": "freightline"
+  "buildCommand": "cd freightline && npm run build",
+  "outputDirectory": "freightline/.next"
 }
