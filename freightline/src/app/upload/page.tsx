@@ -87,22 +87,19 @@ export default function UploadPage() {
       setError("Please upload a .csv file.");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const text = reader.result as string;
+    file.text().then((text: string) => {
       if (text) parseCSV(text, file.name);
-    };
-    reader.readAsText(file);
+    });
   }, [parseCSV]);
 
-  const handleDrop = useCallback((e: any) => {
+  const handleDrop = useCallback((e: DragEvent) => {
     e.preventDefault();
     setDragging(false);
     const file = e.dataTransfer?.files?.[0] ?? null;
     handleFile(file);
   }, [handleFile]);
 
-  const handleFileInput = useCallback((e: any) => {
+  const handleFileInput = useCallback((e: Event) => {
     const input = e.target as HTMLInputElement;
     const file = input.files?.[0] ?? null;
     handleFile(file);
@@ -206,7 +203,7 @@ export default function UploadPage() {
                     ).join("\n");
                     const blob = new Blob([`${header}\n${csv}`], { type: "text/csv" });
                     const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
+                    const a = document.createElement("a") as HTMLAnchorElement;
                     a.href = url;
                     a.download = `freightline-loads-${Date.now()}.csv`;
                     a.click();
@@ -279,29 +276,18 @@ New York, NY,Miami, FL,"12,800 lbs",Furniture,Freightline FL-7,delivered`,
                         </td>
                         <td className="data-cell font-mono text-muted-foreground">{r.weight}</td>
                         <td className="data-cell text-muted-foreground">{r.commodity}</td>
-                        <td className="data-cell font-mono text-xs text-muted-foreground">{r.carrier}</td>
-                        <td className="data-cell">
-                          <span className={`inline-flex items-center gap-1.5 ${statusClass(r.status)}`}>
-                            <span className={`inline-block h-2 w-2 rounded-full ${statusDot(r.status)}`} />
-                            <span className="text-xs font-mono uppercase">{r.status}</span>
+                        <td className="data-cell font-mono text-muted-foreground">{r.carrier}</td>
+                        <td>
+                          <span className={`flex items-center gap-1 ${statusClass(r.status)}`}>
+                            <span className={`h-2 w-2 rounded-full ${statusDot(r.status)}`} />
+                            {r.status}
                           </span>
                         </td>
-                        <td className="data-cell font-mono text-[11px] text-primary">{r.bol}</td>
+                        <td className="data-cell font-mono text-primary">{r.bol}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-              </div>
-            )}
-
-            {/* Footnote */}
-            {rows.length > 0 && (
-              <div className="mt-8 border-t border-[#2a2a2a]/30 pt-6">
-                <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-                  <span className="stencil-label">All parsing done client-side</span>
-                  <span className="stencil-label">No data uploaded to server</span>
-                  <span className="stencil-label">BOLs generated locally</span>
-                </div>
               </div>
             )}
           </div>
