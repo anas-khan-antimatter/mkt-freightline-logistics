@@ -98,13 +98,13 @@ export default function UploadPage() {
   const handleDrop = useCallback((e: any) => {
     e.preventDefault();
     setDragging(false);
-    const file: File | null = e.dataTransfer?.files?.[0] ?? null;
+    const file = e.dataTransfer?.files?.[0] ?? null;
     handleFile(file);
   }, [handleFile]);
 
   const handleFileInput = useCallback((e: any) => {
     const input = e.target as HTMLInputElement;
-    const file: File | null = input.files?.[0] ?? null;
+    const file = input.files?.[0] ?? null;
     handleFile(file);
   }, [handleFile]);
 

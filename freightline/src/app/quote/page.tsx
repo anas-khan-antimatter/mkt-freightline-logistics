@@ -339,11 +339,11 @@ export default function QuotePage() {
 
                     {showBreakdown && (
                       <div className="mt-4 space-y-2 border-t border-[#2a2a2a]/30 pt-4">
-                        {Object.entries(result.breakdown || {}).map(([key, val]: [string, unknown]) => (
+                        {Object.entries(result.breakdown || {}).map(([key, val]: [string, number]) => (
                           <div key={key} className="flex justify-between text-xs">
                             <span className="text-muted-foreground">{key}</span>
-                            <span className={`font-mono ${typeof val === "number" && val < 0 ? "text-primary" : "text-foreground"}`}>
-                              {typeof val === "number" ? (val < 0 ? `−${Math.abs(val).toFixed(2)}` : `${val.toFixed(2)}`) : String(val)}
+                            <span className={`font-mono ${val < 0 ? "text-primary" : "text-foreground"}`}>
+                              {val < 0 ? `−${Math.abs(val).toFixed(2)}` : `${val.toFixed(2)}`}
                             </span>
                           </div>
                         ))}
