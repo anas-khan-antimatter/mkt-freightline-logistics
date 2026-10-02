@@ -87,6 +87,22 @@ function estimateRate(
   };
 }
 
+export async function GET() {
+  return NextResponse.json({
+    message: "Freight Rate Quote API — POST a JSON body with weight, distance, commodityClass, palletCount, urgency.",
+    usage: {
+      method: "POST",
+      body: {
+        weight: "number (lbs, default 5000)",
+        distance: "number (mi, default 400)",
+        commodityClass: "string (50|55|60|65|70|77.5|85|92.5|100, default 65)",
+        palletCount: "number (default 4)",
+        urgency: "string (standard|expedited|next-day|same-day, default standard)",
+      },
+    },
+  });
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
