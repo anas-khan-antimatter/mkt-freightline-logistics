@@ -1,8 +1,8 @@
 {
-  "root": "/tmp/am-ws/c-1790877729008-pf1n9",
-  "name": "c-1790877729008-pf1n9",
-  "generatedAt": "2026-10-01T18:32:08.464Z",
-  "fileCount": 58,
+  "root": "/tmp/am-ws/c-1790884282908-lhwfq",
+  "name": "c-1790884282908-lhwfq",
+  "generatedAt": "2026-10-02T14:37:37.557Z",
+  "fileCount": 59,
   "dirCount": 19,
   "languages": {
     "JSON": 8,
@@ -17,8 +17,9 @@
   "directories": [
     {
       "dir": ".antimatter",
-      "fileCount": 1,
+      "fileCount": 2,
       "files": [
+        "deploy-root",
         "graph.json"
       ],
       "symbols": []

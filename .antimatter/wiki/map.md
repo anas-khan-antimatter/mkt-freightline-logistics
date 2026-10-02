@@ -1,5 +1,5 @@
-# Workspace Map — c-1790877729008-pf1n9
-_Generated 2026-10-01 · 58 files · 19 directories_  
+# Workspace Map — c-1790884282908-lhwfq
+_Generated 2026-10-02 · 59 files · 19 directories_  
 _Deterministic structural map. Regenerate with the `map` tool or "Antimatter: Map Workspace". Do not hand-edit._
 
 ## Languages
@@ -13,8 +13,8 @@ _Deterministic structural map. Regenerate with the `map` tool or "Antimatter: Ma
 - `README.md`
 
 ## Directories
-### `.antimatter` — 1 file
-- files: graph.json
+### `.antimatter` — 2 files
+- files: deploy-root, graph.json
 
 ### `.antimatter/lanes` — 1 file
 - files: ship.json
