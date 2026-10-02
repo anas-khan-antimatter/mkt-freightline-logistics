@@ -339,7 +339,7 @@ export default function QuotePage() {
 
                     {showBreakdown && (
                       <div className="mt-4 space-y-2 border-t border-[#2a2a2a]/30 pt-4">
-                        {Object.entries(result.breakdown || {}).map(([key, val]: [string, unknown]) => (
+                        {(Object.entries as (o: Record<string, number>) => [string, number][])(result.breakdown || {}).map(([key, val]) => (
                           <div key={key} className="flex justify-between text-xs">
                             <span className="text-muted-foreground">{key}</span>
                             <span className={`font-mono ${Number(val) < 0 ? "text-primary" : "text-foreground"}`}>
