@@ -92,18 +92,18 @@ export default function UploadPage() {
     });
   }, [parseCSV]);
 
-  const handleDrop = useCallback((e: DragEvent): void => {
+  const handleDrop: any = useCallback((e: DragEvent): void => {
     e.preventDefault();
     setDragging(false);
     const file = e.dataTransfer?.files?.[0] ?? null;
     handleFile(file);
-  }, [handleFile]) as unknown as DragEventHandler;
+  }, [handleFile]);
 
-  const handleFileInput = useCallback((e: Event): void => {
+  const handleFileInput: any = useCallback((e: Event): void => {
     const input = e.target as HTMLInputElement;
     const file = input.files?.[0] ?? null;
     handleFile(file);
-  }, [handleFile]) as unknown as ChangeEventHandler;
+  }, [handleFile]);
 
   const clearAll = () => {
     setRows([]);
