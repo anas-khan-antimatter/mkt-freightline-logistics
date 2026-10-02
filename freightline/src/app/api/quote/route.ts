@@ -25,7 +25,7 @@ function estimateRate(
   commodityClass: string,
   palletCount: number,
   urgency: string,
-): Record<string, unknown> {
+): Record<string, number | string | null | Record<string, number>> {
   const baseRate = 1.45;
   let weightMultiplier = 1;
   if (weight <= 500) weightMultiplier = 0.6;
