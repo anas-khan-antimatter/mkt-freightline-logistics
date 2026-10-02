@@ -1,5 +1,12 @@
 import { NextResponse } from "next/server";
 
+export async function GET() {
+  return NextResponse.json({
+    message: "BOL (Bill of Lading) API — POST a JSON body with documentName to generate a BOL.",
+    usage: { method: "POST", body: { documentName: "string (required)", documentType: "string (optional)" } },
+  });
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
